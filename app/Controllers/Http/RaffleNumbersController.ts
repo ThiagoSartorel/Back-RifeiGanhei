@@ -44,9 +44,11 @@ export default class RaffleNumbersController {
           const number = await RaffleNumber.query()
             .where('number', body.number[i])
             .where('raffle_id', body.rifaId)
-          if (number) {
+          if (number.length > 0) {
             number[0].clientId = body.clientId
             number[0].save()
+          } else {
+            return response.status(200).send({ message: 'Id da rifa não foi encontrado!' })
           }
         }
         return response.status(200).send({ message: 'Compra efetuada com sucesso!' })
@@ -62,8 +64,6 @@ export default class RaffleNumbersController {
       })
     }
   }
-
-
 
   public async show({}: HttpContextContract) {}
 
