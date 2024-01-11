@@ -48,7 +48,7 @@ export default class RafflesController {
       for (let i = 0; i < raffleWinners.length; i++) {
         const winner = await Client.find(raffleWinners[i].winner)
         if (winner) {
-          winners.push({raffle : raffleWinners[i], client: winner})
+          winners.push({ raffle: raffleWinners[i], client: winner })
         }
       }
       return response.status(200).send(winners)
@@ -64,17 +64,27 @@ export default class RafflesController {
 
   //public async edit({}: HttpContextContract) {}
 
-  public async setWinner({ request, response }: HttpContextContract) {
+  public async setSortNumber({ request, response }: HttpContextContract) {
     try {
       const id = request.param('id')
-      const body = request.only(['clientId'])
+      const body = request.only(['sortNumber'])
       const raffle = await Raffle.find(id)
       if (raffle) {
-        raffle.winner = body.clientId
+        //Nuscar de quem eh o numero
+        const winner = await RaffleNumber.query()
+          .where('id', id)
+          .andWhere('number', body.sortNumber)
+          .first()
+
+        if (winner) {
+          raffle.winner = winner.client_id as unknown as number;
+        }
+        raffle.status = false
+        raffle.sortNumber = body.sortNumber
         await raffle.save()
-        return response.status(200).send({message : "Ganhador atribuido com sucesso!"})
+        return response.status(200).send({ message: 'Ganhador atribuido com sucesso!' })
       }
-      return response.status(200).send({message : "Rifa não encontrada!"})
+      return response.status(200).send({ message: 'Rifa não encontrada!' })
     } catch (err) {
       return response.status(500).send({
         message: 'Ocorreu um erro interno no servidor!',
@@ -82,31 +92,31 @@ export default class RafflesController {
       })
     }
   }
-  
+
   public async update({ request, response }: HttpContextContract) {
     try {
-      const id = request.param('id');
-      const body = request.only(['title', 'description', 'image', 'price', 'quantity']);
-      const raffle = await Raffle.find(id);
-  
+      const id = request.param('id')
+      const body = request.only(['title', 'description', 'image', 'price', 'quantity'])
+      const raffle = await Raffle.find(id)
+
       if (raffle) {
         // Atualiza os campos do raffle com os dados do corpo da solicitação
-        raffle.title = body.title || raffle.title;
-        raffle.description = body.description || raffle.description;
-        raffle.image = body.image || raffle.image;
-        raffle.price = body.price || raffle.price;
-        raffle.quantity = body.quantity || raffle.quantity;
-  
-        await raffle.save();
-  
+        raffle.title = body.title || raffle.title
+        raffle.description = body.description || raffle.description
+        raffle.image = body.image || raffle.image
+        raffle.price = body.price || raffle.price
+        raffle.quantity = body.quantity || raffle.quantity
+
+        await raffle.save()
+
         return response.status(200).send({
           message: 'Rifa atualizada com sucesso!',
           data: raffle,
-        });
+        })
       } else {
         return response.status(404).send({
           message: 'Rifa não encontrada.',
-        });
+        })
       }
     } catch (err) {
       return response.status(500).send({
