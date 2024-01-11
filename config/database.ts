@@ -34,23 +34,23 @@ const databaseConfig: DatabaseConfig = {
     | npm i sqlite3
     |
     */
-    sqlite: {
-      client: 'sqlite',
-      connection: {
-        filename: Application.tmpPath('db.sqlite3'),
-      },
-      pool: {
-        afterCreate: (conn, cb) => {
-          conn.run('PRAGMA foreign_keys=true', cb)
-        }
-      },
-      migrations: {
-        naturalSort: true,
-      },
-      useNullAsDefault: true,
-      healthCheck: false,
-      debug: false,
-    },
+    //sqlite: {
+    //  client: 'sqlite',
+    //  connection: {
+    //    filename: Application.tmpPath('db.sqlite3'),
+    //  },
+    //  pool: {
+    //    afterCreate: (conn, cb) => {
+    //      conn.run('PRAGMA foreign_keys=true', cb)
+    //    }
+    //  },
+    //  migrations: {
+    //    naturalSort: true,
+    //  },
+    //  useNullAsDefault: true,
+    //  healthCheck: false,
+    //  debug: false,
+    //},
 
     /*
     |--------------------------------------------------------------------------
@@ -67,7 +67,7 @@ const databaseConfig: DatabaseConfig = {
       client: 'mssql',
       connection: {
         user: Env.get('MSSQL_USER'),
-        port: Env.get('MSSQL_PORT'),
+        port: parseInt(Env.get('MSSQL_PORT'), 10),
         server: Env.get('MSSQL_SERVER'),
         password: Env.get('MSSQL_PASSWORD', ''),
         database: Env.get('MSSQL_DB_NAME'),
