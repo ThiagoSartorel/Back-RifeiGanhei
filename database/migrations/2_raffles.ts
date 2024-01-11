@@ -13,7 +13,7 @@ export default class extends BaseSchema {
       table.float('price')
       table.string('image')
       table.integer('winner').unsigned().references('id').inTable('clients')
-      table.integer('sortNumber')
+      table.integer('sort_number')
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

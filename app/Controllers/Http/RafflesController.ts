@@ -72,7 +72,7 @@ export default class RafflesController {
       if (raffle) {
         //Nuscar de quem eh o numero
         const winner = await RaffleNumber.query()
-          .where('id', id)
+          .where('raffle_id', id)
           .andWhere('number', body.sortNumber)
           .first()
 
