@@ -77,7 +77,7 @@ export default class RafflesController {
           .first()
 
         if (winner) {
-          raffle.winner = winner.client_id as unknown as number
+          raffle.winner = winner.clientId 
         }
 
         raffle.status = false
