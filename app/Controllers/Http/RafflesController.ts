@@ -75,7 +75,8 @@ export default class RafflesController {
           .where('raffle_id', id)
           .andWhere('number', body.sortNumber)
           .first()
-
+        console.log(winner)
+        console.log("winner")
         if (winner) {
           raffle.winner = winner.client_id as unknown as number;
         }
