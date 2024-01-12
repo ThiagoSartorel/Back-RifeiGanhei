@@ -75,13 +75,15 @@ export default class RafflesController {
           .where('raffle_id', id)
           .andWhere('number', body.sortNumber)
           .first()
-        console.log(winner)
-        console.log("winner")
+
         if (winner) {
-          raffle.winner = winner.client_id as unknown as number;
+          raffle.winner = winner.client_id as unknown as number
         }
+
         raffle.status = false
         raffle.sortNumber = body.sortNumber
+        console.log('raffle')
+        console.log('winner')
         await raffle.save()
         return response.status(200).send({ message: 'Ganhador atribuido com sucesso!' })
       }
