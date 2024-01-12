@@ -82,7 +82,7 @@ export default class RafflesController {
 
         raffle.status = false
         raffle.sortNumber = body.sortNumber
-        console.log('raffle')
+        console.log(raffle)
         console.log('winner')
         await raffle.save()
         return response.status(200).send({ message: 'Ganhador atribuido com sucesso!' })
