@@ -2,11 +2,16 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Client from 'App/Models/Client'
 import Raffle from 'App/Models/Raffle'
 import RaffleNumber from 'App/Models/RaffleNumber'
+import { DateTime } from 'luxon';
 
 export default class RafflesController {
   public async index({ response }: HttpContextContract) {
     try {
       const raffle = await Raffle.query().where('status', true)
+      if(raffle[0] && raffle[0].winner){
+        const winner = await Client.find(raffle[0].winner)
+        raffle[0].winnerName = winner?.name as unknown as string
+      }
       return response.status(200).send(raffle[0])
     } catch (err) {
       return response.status(500).send({
@@ -80,10 +85,8 @@ export default class RafflesController {
           raffle.winner = winner.clientId 
         }
 
-        raffle.status = false
+        //raffle.status = false
         raffle.sortNumber = body.sortNumber
-        console.log(raffle)
-        console.log('winner')
         await raffle.save()
         return response.status(200).send({ message: 'Ganhador atribuido com sucesso!' })
       }
@@ -99,7 +102,7 @@ export default class RafflesController {
   public async update({ request, response }: HttpContextContract) {
     try {
       const id = request.param('id')
-      const body = request.only(['title', 'description', 'image', 'price', 'quantity'])
+      const body = request.only(['title', 'description', 'image', 'price', 'quantity', 'sortNumber', 'sortDate', 'status'])
       const raffle = await Raffle.find(id)
 
       if (raffle) {
@@ -109,6 +112,11 @@ export default class RafflesController {
         raffle.image = body.image || raffle.image
         raffle.price = body.price || raffle.price
         raffle.quantity = body.quantity || raffle.quantity
+        raffle.sortNumber = body.sortNumber || raffle.sortNumber
+        raffle.status = body.status || raffle.status
+        const date = body.sortDate ? DateTime.fromISO(body.sortDate) : null;
+        raffle.sortDate = date || raffle.sortDate;
+        
 
         await raffle.save()
 

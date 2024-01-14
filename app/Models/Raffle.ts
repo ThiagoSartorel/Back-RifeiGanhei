@@ -28,6 +28,12 @@ export default class Raffle extends BaseModel {
   public sortNumber: number
 
   @column()
+  public winnerName: string
+
+  @column.dateTime()
+  public sortDate: DateTime
+
+  @column()
   public winner: number
   @belongsTo(()=> Client)
   public winner_id: BelongsTo<typeof Client>
